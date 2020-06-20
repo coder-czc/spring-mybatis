@@ -16,6 +16,8 @@ public interface UsersService {
 
     Users selectByPrimaryKey(Integer id);
 
+    int selectByNameAndPass(String name,String pass);
+
     int updateByPrimaryKeySelective(Users record);
 
     int updateByPrimaryKey(Users users);
