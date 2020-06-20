@@ -64,7 +64,7 @@ public class UsersController {
 
     @ResponseBody
 
-    public void adduser(HttpServletResponse response, HttpServletRequest request ,@RequestBody Users users) throws IOException {
+    public int adduser(HttpServletResponse response, HttpServletRequest request ,@RequestBody Users users) throws IOException {
         /*System.out.println("au:" + map);
         Users users = new Users();
         users.setName(map.get("name").toString());
@@ -74,7 +74,9 @@ public class UsersController {
         user.setName(users.getName());
         user.setPass(users.getPass());
         System.out.println(users);
-        this.usersService.insert(users);
+        int r= this.usersService.insert(users);
+        System.out.println(r);
+        return r;
     }
 
     @RequestMapping("/updateuser")
@@ -95,8 +97,13 @@ public class UsersController {
 
     @ResponseBody
 
-    public void deluser(HttpServletResponse response, HttpServletRequest request,int[] ids) throws IOException {
-
+    public void deluser(HttpServletResponse response, HttpServletRequest request,@RequestBody JSONObject object) throws IOException {
+        System.out.println("o:"+object.get("id"));
+        String id = object.get("id").toString();
+        String[] str = id.split(",");
+        for(String s : str){
+            usersService.deleteByPrimaryKey(Integer.parseInt(s));
+        }
 //        this.usersService.deleteByPrimaryKey();
     }
 }
