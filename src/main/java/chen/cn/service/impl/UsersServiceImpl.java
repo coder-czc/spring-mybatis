@@ -20,7 +20,7 @@ public class UsersServiceImpl implements UsersService {
 
     public int deleteByPrimaryKey(Integer id) {
 
-        return 0;
+        return usersMapper.deleteByPrimaryKey(id);
 
     }
 
@@ -43,6 +43,10 @@ usersMapper.insert(users);
 
         return usersMapper.selectByPrimaryKey(id);//根据users数据表的id进行查询
 
+    }
+
+    public int selectByNameAndPass(String name,String pass){
+        return usersMapper.selectByNameAndPass(name,pass);
     }
 
     public int updateByPrimaryKeySelective(Users record) {
