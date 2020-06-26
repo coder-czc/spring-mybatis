@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="chen.cn.mapper.ClassesMapper" >
+  <resultMap id="BaseResultMap" type="chen.cn.entity.Classes" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="major_id" property="majorId" jdbcType="INTEGER" />
+    <result column="major_name" property="majorName" jdbcType="VARCHAR" />
+    <result column="student_number" property="studentNumber" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, major_id, major_name, student_number, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from Classes
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    *
+    from classes
+
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from Classes
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="chen.cn.entity.Classes" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into Classes (name, major_id, major_name, 
+      student_number, create_time, update_time
+      )
+    values (#{name,jdbcType=VARCHAR}, #{majorId,jdbcType=INTEGER}, #{majorName,jdbcType=VARCHAR}, 
+      #{studentNumber,jdbcType=INTEGER}, now(), now()
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="chen.cn.entity.Classes" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into Classes
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="majorId != null" >
+        major_id,
+      </if>
+      <if test="majorName != null" >
+        major_name,
+      </if>
+      <if test="studentNumber != null" >
+        student_number,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="majorId != null" >
+        #{majorId,jdbcType=INTEGER},
+      </if>
+      <if test="majorName != null" >
+        #{majorName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentNumber != null" >
+        #{studentNumber,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="chen.cn.entity.Classes" >
+    update Classes
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="majorId != null" >
+        major_id = #{majorId,jdbcType=INTEGER},
+      </if>
+      <if test="majorName != null" >
+        major_name = #{majorName,jdbcType=VARCHAR},
+      </if>
+      <if test="studentNumber != null" >
+        student_number = #{studentNumber,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="chen.cn.entity.Classes" >
+    update Classes
+    set name = #{name,jdbcType=VARCHAR},
+      major_id = #{majorId,jdbcType=INTEGER},
+      major_name = #{majorName,jdbcType=VARCHAR},
+      student_number = #{studentNumber,jdbcType=INTEGER},
+      update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

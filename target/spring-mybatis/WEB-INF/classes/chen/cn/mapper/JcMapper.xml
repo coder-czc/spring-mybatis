@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="chen.cn.mapper.JcMapper" >
+  <resultMap id="BaseResultMap" type="chen.cn.entity.Jc" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="isbn" property="isbn" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="publisher_id" property="publisherId" jdbcType="INTEGER" />
+    <result column="price" property="price" jdbcType="DOUBLE" />
+    <result column="pubdate" property="pubdate" jdbcType="TIMESTAMP" />
+    <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+    <result column="major_text" property="majorText" jdbcType="VARCHAR" />
+    <result column="classse_id" property="classseId" jdbcType="INTEGER" />
+    <result column="classse_text" property="classseText" jdbcType="VARCHAR" />
+    <result column="levels_id" property="levelsId" jdbcType="INTEGER" />
+    <result column="course_id" property="courseId" jdbcType="INTEGER" />
+    <result column="course_name" property="courseName" jdbcType="VARCHAR" />
+    <result column="teacher_use" property="teacherUse" jdbcType="INTEGER" />
+    <result column="yesorno" property="yesorno" jdbcType="INTEGER" />
+    <result column="sd_datetime" property="sdDatetime" jdbcType="VARCHAR" />
+    <result column="sd_teacher" property="sdTeacher" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="chen.cn.entity.JcWithBLOBs" extends="BaseResultMap" >
+    <result column="k_overview" property="kOverview" jdbcType="LONGVARCHAR" />
+    <result column="depart_opinion" property="departOpinion" jdbcType="LONGVARCHAR" />
+    <result column="company_option" property="companyOption" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, isbn, author, publisher_id, price, pubdate, category_id, major_text, classse_id, 
+    classse_text, levels_id, course_id, course_name, teacher_use, yesorno, sd_datetime, 
+    sd_teacher, create_time, update_time
+  </sql>
+  <sql id="Blob_Column_List" >
+    k_overview, depart_opinion, company_option
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from jc
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select
+    *
+    from Jc
+
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from jc
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="chen.cn.entity.JcWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into jc (name, isbn, author, 
+      publisher_id, price, pubdate, 
+      category_id, major_text, classse_id, 
+      classse_text, levels_id, course_id, 
+      course_name, teacher_use, yesorno, 
+      sd_datetime, sd_teacher, create_time, 
+      update_time, k_overview, depart_opinion, 
+      company_option)
+    values (#{name,jdbcType=VARCHAR}, #{isbn,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
+      #{publisherId,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}, #{pubdate,jdbcType=TIMESTAMP}, 
+      #{categoryId,jdbcType=INTEGER}, #{majorText,jdbcType=VARCHAR}, #{classseId,jdbcType=INTEGER}, 
+      #{classseText,jdbcType=VARCHAR}, #{levelsId,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER}, 
+      #{courseName,jdbcType=VARCHAR}, #{teacherUse,jdbcType=INTEGER}, #{yesorno,jdbcType=INTEGER}, 
+      #{sdDatetime,jdbcType=VARCHAR}, #{sdTeacher,jdbcType=INTEGER}, now(),
+      now(), #{kOverview,jdbcType=LONGVARCHAR}, #{departOpinion,jdbcType=LONGVARCHAR},
+      #{companyOption,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="chen.cn.entity.JcWithBLOBs" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into jc
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="isbn != null" >
+        isbn,
+      </if>
+      <if test="author != null" >
+        author,
+      </if>
+      <if test="publisherId != null" >
+        publisher_id,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="pubdate != null" >
+        pubdate,
+      </if>
+      <if test="categoryId != null" >
+        category_id,
+      </if>
+      <if test="majorText != null" >
+        major_text,
+      </if>
+      <if test="classseId != null" >
+        classse_id,
+      </if>
+      <if test="classseText != null" >
+        classse_text,
+      </if>
+      <if test="levelsId != null" >
+        levels_id,
+      </if>
+      <if test="courseId != null" >
+        course_id,
+      </if>
+      <if test="courseName != null" >
+        course_name,
+      </if>
+      <if test="teacherUse != null" >
+        teacher_use,
+      </if>
+      <if test="yesorno != null" >
+        yesorno,
+      </if>
+      <if test="sdDatetime != null" >
+        sd_datetime,
+      </if>
+      <if test="sdTeacher != null" >
+        sd_teacher,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="kOverview != null" >
+        k_overview,
+      </if>
+      <if test="departOpinion != null" >
+        depart_opinion,
+      </if>
+      <if test="companyOption != null" >
+        company_option,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isbn != null" >
+        #{isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherId != null" >
+        #{publisherId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="pubdate != null" >
+        #{pubdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="categoryId != null" >
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="majorText != null" >
+        #{majorText,jdbcType=VARCHAR},
+      </if>
+      <if test="classseId != null" >
+        #{classseId,jdbcType=INTEGER},
+      </if>
+      <if test="classseText != null" >
+        #{classseText,jdbcType=VARCHAR},
+      </if>
+      <if test="levelsId != null" >
+        #{levelsId,jdbcType=INTEGER},
+      </if>
+      <if test="courseId != null" >
+        #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="courseName != null" >
+        #{courseName,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherUse != null" >
+        #{teacherUse,jdbcType=INTEGER},
+      </if>
+      <if test="yesorno != null" >
+        #{yesorno,jdbcType=INTEGER},
+      </if>
+      <if test="sdDatetime != null" >
+        #{sdDatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="sdTeacher != null" >
+        #{sdTeacher,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="kOverview != null" >
+        #{kOverview,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="departOpinion != null" >
+        #{departOpinion,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="companyOption != null" >
+        #{companyOption,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="chen.cn.entity.JcWithBLOBs" >
+    update jc
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="isbn != null" >
+        isbn = #{isbn,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="publisherId != null" >
+        publisher_id = #{publisherId,jdbcType=INTEGER},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="pubdate != null" >
+        pubdate = #{pubdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="categoryId != null" >
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="majorText != null" >
+        major_text = #{majorText,jdbcType=VARCHAR},
+      </if>
+      <if test="classseId != null" >
+        classse_id = #{classseId,jdbcType=INTEGER},
+      </if>
+      <if test="classseText != null" >
+        classse_text = #{classseText,jdbcType=VARCHAR},
+      </if>
+      <if test="levelsId != null" >
+        levels_id = #{levelsId,jdbcType=INTEGER},
+      </if>
+      <if test="courseId != null" >
+        course_id = #{courseId,jdbcType=INTEGER},
+      </if>
+      <if test="courseName != null" >
+        course_name = #{courseName,jdbcType=VARCHAR},
+      </if>
+      <if test="teacherUse != null" >
+        teacher_use = #{teacherUse,jdbcType=INTEGER},
+      </if>
+      <if test="yesorno != null" >
+        yesorno = #{yesorno,jdbcType=INTEGER},
+      </if>
+      <if test="sdDatetime != null" >
+        sd_datetime = #{sdDatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="sdTeacher != null" >
+        sd_teacher = #{sdTeacher,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="kOverview != null" >
+        k_overview = #{kOverview,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="departOpinion != null" >
+        depart_opinion = #{departOpinion,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="companyOption != null" >
+        company_option = #{companyOption,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="chen.cn.entity.JcWithBLOBs" >
+    update jc
+    set name = #{name,jdbcType=VARCHAR},
+      isbn = #{isbn,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      publisher_id = #{publisherId,jdbcType=INTEGER},
+      price = #{price,jdbcType=DOUBLE},
+      pubdate = #{pubdate,jdbcType=TIMESTAMP},
+      category_id = #{categoryId,jdbcType=INTEGER},
+      major_text = #{majorText,jdbcType=VARCHAR},
+      classse_id = #{classseId,jdbcType=INTEGER},
+      classse_text = #{classseText,jdbcType=VARCHAR},
+      levels_id = #{levelsId,jdbcType=INTEGER},
+      course_id = #{courseId,jdbcType=INTEGER},
+      course_name = #{courseName,jdbcType=VARCHAR},
+      teacher_use = #{teacherUse,jdbcType=INTEGER},
+      yesorno = #{yesorno,jdbcType=INTEGER},
+      sd_datetime = #{sdDatetime,jdbcType=VARCHAR},
+      sd_teacher = #{sdTeacher,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      k_overview = #{kOverview,jdbcType=LONGVARCHAR},
+      depart_opinion = #{departOpinion,jdbcType=LONGVARCHAR},
+      company_option = #{companyOption,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="chen.cn.entity.Jc" >
+    update jc
+    set name = #{name,jdbcType=VARCHAR},
+      isbn = #{isbn,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      publisher_id = #{publisherId,jdbcType=INTEGER},
+      price = #{price,jdbcType=DOUBLE},
+      pubdate = #{pubdate,jdbcType=TIMESTAMP},
+      category_id = #{categoryId,jdbcType=INTEGER},
+      major_text = #{majorText,jdbcType=VARCHAR},
+      classse_id = #{classseId,jdbcType=INTEGER},
+      classse_text = #{classseText,jdbcType=VARCHAR},
+      levels_id = #{levelsId,jdbcType=INTEGER},
+      course_id = #{courseId,jdbcType=INTEGER},
+      course_name = #{courseName,jdbcType=VARCHAR},
+      teacher_use = #{teacherUse,jdbcType=INTEGER},
+      yesorno = #{yesorno,jdbcType=INTEGER},
+      sd_datetime = #{sdDatetime,jdbcType=VARCHAR},
+      sd_teacher = #{sdTeacher,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
