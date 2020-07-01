@@ -2,137 +2,129 @@ package chen.cn.controller;
 
 import chen.cn.common.ServerResponse;
 import chen.cn.entity.Course;
+import chen.cn.service.CourseService;
+import net.minidev.json.JSONObject;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @Controller //这是控制器的的注解，代码当前类为一个控制器
 
-@RequestMapping("/course")
+@RequestMapping("/course")  //这个注解表示控制器的映射的地址为服务器地址+admin
+
 public class CourseController {
-    @Resource(name="courseServiceImpl")  //这个注解表示自动注入CourseSeerviceImpl业务实现类
+    @Resource(name="courseServiceImpl")  //这个注解表示自动注入courseSeerviceImpl业务实现类
 
     @Autowired  //表示紧跟后面的字段进行封装（即getter和setter）
 
-    private chen.cn.service.CourseService courseService;  //这是与上面注入的业务实现类的接口
+    private CourseService courseService;  //这是与上面注入的业务实现类的接口
 
 
 
-    @RequestMapping("/delete")
-
-    @ResponseBody
-
-    public void deleteByPrimaryKey(Integer id){
-
-        courseService.deleteByPrimaryKey(id);
-
+    @RequestMapping("/index")
+    public String index(){
+        return "adminindex";
     }
-
-
-
-    @RequestMapping("/insert")
-
-    @ResponseBody
-
-    public void insert(Course record){
-
-        Course course=new Course();
-        course.setName("yuwen");
-        course.setCode("1");
-        course.setNature("jisuanji");
-        course.setPeriod(1);
-        courseService.insert(course);
-    }
-
-
-
-    @RequestMapping("/insertSelective")
-
-    @ResponseBody
-
-    public void insertSelective(Course record){}
-
-
 
     @RequestMapping("/list")
-
-    @ResponseBody
-
-    public Course list(HttpServletRequest request, HttpServletResponse response){
-
-        Course Course=courseService.selectByPrimaryKey(1);
-
-        System.out.println(Course.getName());
-
-        return Course;
-
+    public String list(){
+        return "courselist";
     }
 
-
-
-    @RequestMapping("/listall")
-
+    @RequestMapping(value = "/deleteByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
+    public ServerResponse deleteByPrimaryKey(HttpServletRequest request, HttpServletResponse response,@RequestBody JSONObject object) throws IOException {
+        int i=0;
+        String id = object.get("id").toString();
+        String[] str = id.split(",");
+        for (String s : str) {
+            i=  courseService.deleteByPrimaryKey(Integer.parseInt(s));
 
-    public List<Course> listall(HttpServletRequest request, HttpServletResponse response){
-
-        List<Course> courseList=courseService.selectAll();
-
-        return courseList;
-
-    }
-
-    @RequestMapping("/checkCourse")
-
-    @ResponseBody
-
-    public ServerResponse checkCourse(@Param("name") String name){
-
-        if(courseService.checkCourse(name)>0){
-
-            return ServerResponse.createBySuccess("可以使用管理");
-
-        }else{
-
-            return ServerResponse.createByErrorMessage("管理员信息已经");
-
+        }
+        if (i> 0) {
+            // response.getWriter().println("{\"status\":0,\"msg\":\"删除用户成功\"");
+            return ServerResponse.createBySuccessMessage("删除用户成功");
+        } else {
+            //response.getWriter().println("{\"status\":1,\"msg\":\"删除用户失败\"");
+            return ServerResponse.createByErrorMessage("删除用户失败");
         }
 
     }
 
 
-    @RequestMapping("/updateByPrimaryKeySelective")
-
+    @RequestMapping(value = "/insert",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-
-    public void updateByPrimaryKeySelective(Course record){
-
-
-
+    public ServerResponse   insert(/*Admin record,*/ HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Course course=new Course();
+        courseService.insert(course);
+        if(courseService.insert(course)>0){
+            return ServerResponse.createBySuccessMessage("添加用户成功");
+        }else{
+            return ServerResponse.createByErrorMessage("添加用户失败");
+        }
     }
 
 
-
-    @RequestMapping("/updateByPrimaryKey")
-
+    @RequestMapping(value = "/insertSelective",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
+    public ServerResponse  insertSelective(Course record, HttpServletRequest request, HttpServletResponse response){
+        System.out.println(record.getName());
+        if(courseService.insert(record)>0){
+            return ServerResponse.createBySuccessMessage("添加数据成功");
+        }else{
+            return ServerResponse.createByErrorMessage("添加数据失败");
+        }
+    }
 
-    public void updateByPrimaryKey(Course record){
 
-        Course course=new Course();
-        course.setId(1);
-        course.setName("yuwen");
-        course.setCode("1");
-        course.setNature("jisuanji");
-        course.setPeriod(1);
-        courseService.insert(course);
+    @RequestMapping(value = "/selectByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse   selectByPrimaryKey(Integer id, HttpServletRequest request, HttpServletResponse response){
+        Course course=courseService.selectByPrimaryKey(id);
+        if(course != null){
+            return ServerResponse.createBySuccess(1,course);
+        }else{
+            return ServerResponse.createByErrorMessage("没有找到用户");
+        }
+    }
 
+
+    @RequestMapping(value = "/updateByPrimaryKeySelective",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse updateByPrimaryKeySelective(Course record, HttpServletRequest request, HttpServletResponse response){
+        System.out.println("d:"+record.getId()+','+record.getName());
+        if(courseService.updateByPrimaryKeySelective(record)>0){
+            return ServerResponse.createBySuccessMessage("更新数据成功");
+        }else{
+            return ServerResponse.createByErrorMessage("更新数据失败");
+        }
+    }
+
+
+    @RequestMapping(value = "/updateByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public void  updateByPrimaryKey(Course record, HttpServletRequest request, HttpServletResponse response){}
+
+
+    @RequestMapping(value = "/listAll",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse   listAll( HttpServletRequest request, HttpServletResponse response){
+
+        List<Course> courses=courseService.selectAll();
+        if(courses.size()>0){
+            return ServerResponse.createBySuccess(courses.size(),courses);
+        }else{
+            return ServerResponse.createByErrorMessage("没有找到用户");
+        }
     }
 }

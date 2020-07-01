@@ -1,159 +1,127 @@
 package chen.cn.controller;
 
 import chen.cn.common.ServerResponse;
-import chen.cn.entity.Jc;
+import chen.cn.entity.JcWithBLOBs;
+import net.minidev.json.JSONObject;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
-
 
 @Controller //这是控制器的的注解，代码当前类为一个控制器
 
 @RequestMapping("/jc")
 public class JcController {
-    @Resource(name="jcServiceImpl")  //这个注解表示自动注入JcSeerviceImpl业务实现类
+    @Resource(name="jcServiceImpl")  //这个注解表示自动注入jcSeerviceImpl业务实现类
 
     @Autowired  //表示紧跟后面的字段进行封装（即getter和setter）
 
     private chen.cn.service.JcService jcService;  //这是与上面注入的业务实现类的接口
 
 
-
-    @RequestMapping("/delete")
-
-    @ResponseBody
-
-    public void deleteByPrimaryKey(Integer id){
-
-        jcService.deleteByPrimaryKey(id);
-
+    @RequestMapping("/index")
+    public String index(){
+        return "adminindex";
     }
-
-
-
-    @RequestMapping("/insert")
-
-    @ResponseBody
-
-    public void insert(Jc record){
-
-        Jc jc=new Jc();
-        jc.setName("yuwen");
-        jc.setAuthor("lisi");
-        jc.setCategoryId(1);
-        jc.setClassseId(1);
-        jc.setCourseId(1);
-        jc.setCourseName("yuwen");
-        jc.setIsbn("NNNNN");
-        jc.setLevelsId(1);
-        jc.setMajorText("666");
-        jc.setSdTeacher(1);
-        jc.setPublisherId(1);
-        jc.setYesorno(1);
-        jc.setPrice(100.00);
-        jc.setTeacherUse(1);
-        jcService.insert(jc);
-    }
-
-
-
-    @RequestMapping("/insertSelective")
-
-    @ResponseBody
-
-    public void insertSelective(Jc record){}
-
-
 
     @RequestMapping("/list")
-
-    @ResponseBody
-
-    public Jc list(HttpServletRequest request, HttpServletResponse response){
-
-        Jc Jc=jcService.selectByPrimaryKey(1);
-
-        System.out.println(Jc.getName());
-
-        return Jc;
-
+    public String list(){
+        return "jclist";
     }
 
-
-
-    @RequestMapping("/listall")
-
+    @RequestMapping(value = "/deleteByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
+    public ServerResponse deleteByPrimaryKey(HttpServletRequest request, HttpServletResponse response,@RequestBody JSONObject object) throws IOException {
+        int i=0;
+        String id = object.get("id").toString();
+        String[] str = id.split(",");
+        for (String s : str) {
+            i=  jcService.deleteByPrimaryKey(Integer.parseInt(s));
 
-    public List<Jc> listall(HttpServletRequest request, HttpServletResponse response){
-
-        List<Jc> jcList=jcService.selectAll();
-
-        return jcList;
-
-    }
-
-    @RequestMapping("/checkJc")
-
-    @ResponseBody
-
-    public ServerResponse checkJc(@Param("name") String name){
-
-        if(jcService.checkJc(name)>0){
-
-            return ServerResponse.createBySuccess("可以使用管理");
-
-        }else{
-
-            return ServerResponse.createByErrorMessage("管理员信息已经");
-
+        }
+        if (i> 0) {
+            // response.getWriter().println("{\"status\":0,\"msg\":\"删除用户成功\"");
+            return ServerResponse.createBySuccessMessage("删除用户成功");
+        } else {
+            //response.getWriter().println("{\"status\":1,\"msg\":\"删除用户失败\"");
+            return ServerResponse.createByErrorMessage("删除用户失败");
         }
 
     }
 
 
-    @RequestMapping("/updateByPrimaryKeySelective")
-
+    @RequestMapping(value = "/insert",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-
-    public void updateByPrimaryKeySelective(Jc record){
-
-
-
+    public ServerResponse   insert(/*Admin record,*/ HttpServletRequest request, HttpServletResponse response) throws IOException {
+        JcWithBLOBs jc=new JcWithBLOBs();
+        jcService.insert(jc);
+        if(jcService.insert(jc)>0){
+            return ServerResponse.createBySuccessMessage("添加用户成功");
+        }else{
+            return ServerResponse.createByErrorMessage("添加用户失败");
+        }
     }
 
 
-
-    @RequestMapping("/updateByPrimaryKey")
-
+    @RequestMapping(value = "/insertSelective",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
+    public ServerResponse  insertSelective(JcWithBLOBs record, HttpServletRequest request, HttpServletResponse response){
+        System.out.println(record.getName());
+        if(jcService.insert(record)>0){
+            return ServerResponse.createBySuccessMessage("添加数据成功");
+        }else{
+            return ServerResponse.createByErrorMessage("添加数据失败");
+        }
+    }
 
-    public void updateByPrimaryKey(Jc record){
 
-        Jc jc=new Jc();
-        jc.setId(1);
-        jc.setName("yuwen");
-        jc.setAuthor("lisi");
-        jc.setCategoryId(1);
-        jc.setClassseId(1);
-        jc.setCourseId(1);
-        jc.setCourseName("yuwen");
-        jc.setIsbn("NNNNN");
-        jc.setLevelsId(1);
-        jc.setMajorText("666");
-        jc.setSdTeacher(1);
-        jc.setPublisherId(1);
-        jc.setYesorno(1);
-        jc.setPrice(100.00);
-        jc.setTeacherUse(1);
-        jcService.insert(jc);
+    @RequestMapping(value = "/selectByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse   selectByPrimaryKey(Integer id, HttpServletRequest request, HttpServletResponse response){
+        JcWithBLOBs jc=jcService.selectByPrimaryKey(id);
+        if(jc != null){
+            return ServerResponse.createBySuccess(1,jc);
+        }else{
+            return ServerResponse.createByErrorMessage("没有找到用户");
+        }
+    }
 
+
+    @RequestMapping(value = "/updateByPrimaryKeySelective",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse updateByPrimaryKeySelective(JcWithBLOBs record, HttpServletRequest request, HttpServletResponse response){
+        System.out.println("d:"+record.getId()+','+record.getName());
+        if(jcService.updateByPrimaryKeySelective(record)>0){
+            return ServerResponse.createBySuccessMessage("更新数据成功");
+        }else{
+            return ServerResponse.createByErrorMessage("更新数据失败");
+        }
+    }
+
+
+    @RequestMapping(value = "/updateByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public void  updateByPrimaryKey(JcWithBLOBs record, HttpServletRequest request, HttpServletResponse response){}
+
+
+    @RequestMapping(value = "/listAll",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse   listAll( HttpServletRequest request, HttpServletResponse response){
+
+        List<JcWithBLOBs> jcs=jcService.selectAll();
+        if(jcs.size()>0){
+            return ServerResponse.createBySuccess(jcs.size(),jcs);
+        }else{
+            return ServerResponse.createByErrorMessage("没有找到用户");
+        }
     }
 }

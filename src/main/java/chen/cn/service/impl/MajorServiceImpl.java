@@ -45,7 +45,7 @@ public class MajorServiceImpl implements MajorService {
 
     @Override
     public int updateByPrimaryKeySelective(Major record) {
-        return 0;
+        return majorMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override

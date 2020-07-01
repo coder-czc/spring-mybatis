@@ -1,134 +1,127 @@
 package chen.cn.controller;
 
 import chen.cn.common.ServerResponse;
+import chen.cn.entity.Admin;
 import chen.cn.entity.Department;
-import org.apache.ibatis.annotations.Param;
+import chen.cn.service.AdminService;
+import chen.cn.service.DepartmentService;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
-@Controller //这是控制器的的注解，代码当前类为一个控制器
-
+@Controller
 @RequestMapping("/department")
 public class DepartmentController {
-    @Resource(name="departmentServiceImpl")  //这个注解表示自动注入departmentSeerviceImpl业务实现类
+    @Resource(name="departmentServiceImpl")
+    @Autowired
+    private DepartmentService departmentService;
 
-    @Autowired  //表示紧跟后面的字段进行封装（即getter和setter）
-
-    private chen.cn.service.DepartmentService departmentService;  //这是与上面注入的业务实现类的接口
-
-
-
-    @RequestMapping("/delete")
-
-    @ResponseBody
-
-    public void deleteByPrimaryKey(Integer id){
-
-        departmentService.deleteByPrimaryKey(id);
-
+    @RequestMapping("/index")
+    public String index(){
+        return "adminindex";
     }
-
-
-
-    @RequestMapping("/insert")
-
-    @ResponseBody
-
-    public void insert(Department record){
-
-        Department department=new Department();
-        department.setName("jiaowuchu");
-        department.setdManager("lisi");
-        departmentService.insert(department);
-    }
-
-
-
-    @RequestMapping("/insertSelective")
-
-    @ResponseBody
-
-    public void insertSelective(Department record){}
-
-
 
     @RequestMapping("/list")
-
-    @ResponseBody
-
-    public Department list(HttpServletRequest request, HttpServletResponse response){
-
-        Department department=departmentService.selectByPrimaryKey(1);
-
-        System.out.println(department.getName());
-
-        return department;
-
+    public String list(){
+        return "departmentlist";
     }
 
-
-
-    @RequestMapping("/listall")
-
+    @RequestMapping(value = "/deleteByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
+    public ServerResponse deleteByPrimaryKey(HttpServletRequest request, HttpServletResponse response,@RequestBody JSONObject object) throws IOException {
+        int i=0;
+        String id = object.get("id").toString();
+        String[] str = id.split(",");
+        for (String s : str) {
+            i=  departmentService.deleteByPrimaryKey(Integer.parseInt(s));
 
-    public List<Department> listall(HttpServletRequest request, HttpServletResponse response){
-
-        List<Department> departmentlist=departmentService.selectAll();
-
-        return departmentlist;
-
-    }
-
-    @RequestMapping("/checkdepartment")
-
-    @ResponseBody
-
-    public ServerResponse checkDepartment(@Param("name") String name){
-
-        if(departmentService.checkDepartment(name)>0){
-
-            return ServerResponse.createBySuccess("可以使用管理");
-
-        }else{
-
-            return ServerResponse.createByErrorMessage("管理员信息已经");
-
+        }
+        if (i> 0) {
+            // response.getWriter().println("{\"status\":0,\"msg\":\"删除用户成功\"");
+            return ServerResponse.createBySuccessMessage("删除用户成功");
+        } else {
+            //response.getWriter().println("{\"status\":1,\"msg\":\"删除用户失败\"");
+            return ServerResponse.createByErrorMessage("删除用户失败");
         }
 
     }
 
 
-    @RequestMapping("/updateByPrimaryKeySelective")
-
+    @RequestMapping(value = "/insert",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-
-    public void updateByPrimaryKeySelective(Department record){
-
-
-
+    public ServerResponse   insert(/*Admin record,*/ HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Department department=new Department();
+        department.setName("jiaowuchu");
+        department.setdManager("lisi");
+        departmentService.insert(department);
+        if(departmentService.insert(department)>0){
+            return ServerResponse.createBySuccessMessage("添加用户成功");
+        }else{
+            return ServerResponse.createByErrorMessage("添加用户失败");
+        }
     }
 
 
-
-    @RequestMapping("/updateByPrimaryKey")
-
+    @RequestMapping(value = "/insertSelective",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
+    public ServerResponse  insertSelective(Department record, HttpServletRequest request, HttpServletResponse response){
+        System.out.println(record.getName());
+        if(departmentService.insert(record)>0){
+            return ServerResponse.createBySuccessMessage("添加数据成功");
+        }else{
+            return ServerResponse.createByErrorMessage("添加数据失败");
+        }
+    }
 
-    public void updateByPrimaryKey(Department record){
 
-        Department department=new Department();
-        department.setId(1);
-        department.setName("yingyu");
-        department.setdManager("lisi");
-        departmentService.insert(department);
+    @RequestMapping(value = "/selectByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse   selectByPrimaryKey(Integer id, HttpServletRequest request, HttpServletResponse response){
+        Department department=departmentService.selectByPrimaryKey(id);
+        if(department != null){
+            return ServerResponse.createBySuccess(1,department);
+        }else{
+            return ServerResponse.createByErrorMessage("没有找到用户");
+        }
+    }
 
+
+    @RequestMapping(value = "/updateByPrimaryKeySelective",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse updateByPrimaryKeySelective(Department record, HttpServletRequest request, HttpServletResponse response){
+        System.out.println("d:"+record.getId()+','+record.getName()+','+record.getdManager());
+        if(departmentService.updateByPrimaryKeySelective(record)>0){
+            return ServerResponse.createBySuccessMessage("更新数据成功");
+        }else{
+            return ServerResponse.createByErrorMessage("更新数据失败");
+        }
+    }
+
+
+    @RequestMapping(value = "/updateByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public void  updateByPrimaryKey(Department record, HttpServletRequest request, HttpServletResponse response){}
+
+
+    @RequestMapping(value = "/listAll",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse   listAll( HttpServletRequest request, HttpServletResponse response){
+
+        List<Department> departments=departmentService.selectAll();
+        if(departments.size()>0){
+            return ServerResponse.createBySuccess(departments.size(),departments);
+        }else{
+            return ServerResponse.createByErrorMessage("没有找到用户");
+        }
     }
 }

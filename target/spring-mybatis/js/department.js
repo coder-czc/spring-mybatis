@@ -1,0 +1,428 @@
+function departmentupdate(row){
+
+    /*判断页面中是否存在id="dd"元素，若存在则进行删除*/
+
+    if($("#dd") != null){
+
+        $("#dd").remove();
+
+    }
+
+    /*在页面中id="tab"的元素中添加一个id="dd"的div元素*/
+
+    $("#tab").append("<div id='dd'></div>");
+
+    /*以页面中的id="dd"的元素作为对话框的内容*/
+
+    $('#dd').dialog({
+
+        title: '更新单位信息',//对话框的标题
+
+        width: 300,//对话框的宽度
+
+        closed: false,
+
+        cache: false,//不允许有缓冲
+
+        modal: true ,//采用模式，即必须关闭对话框后才能做别的操作
+
+        buttons:[{ //为对话框添加底部按钮
+
+            text:'保存',
+
+            handler:function(){
+
+                $('#ff').form('submit', {
+
+                    url:"updateByPrimaryKeySelective",
+
+                    onSubmit: function(){
+
+                        //在这里编写表单字段验证
+
+                    },
+
+                    success:function(data){
+
+                        $('#dd').dialog("close");//关闭当前添加窗口
+
+                        $('#dg').datagrid("reload");//重新装入表格的内容
+
+                    }
+
+                });
+
+
+
+            }
+
+        },{
+
+            text:'关闭',
+
+            handler:function(){
+
+                $('#dd').dialog("close");
+
+            }
+
+        }]
+
+    });
+
+    //创建添加单位安排表单
+
+    var str = ' <form id="ff" method="post">\n' +
+
+        '        <table>\n' +
+
+        '            <tr>\n' +
+
+        '                <td><input type="hidden" id="id" name="id" /> </td>\n' +
+
+        '            </tr>\n' +
+
+        '            <tr>\n' +
+
+        '                <td>单位名称</td>\n' +
+
+        '                <td><input type="text" id="name" name="name" /> </td>\n' +
+
+        '            </tr>\n' +
+
+        '            <tr>\n' +
+
+        '                <td>单位负责人</td>\n' +
+
+        '                <td><input type="text" id="dManager" name="dManager" /> </td>\n' +
+
+        '            </tr>\n' +
+
+        '        </table>\n' +
+
+        '    </form>';
+
+    //把表单添加到对话框中
+
+    $("#dd").html(str);
+
+    $('#ff').form('load',row[0]);//为表单加载数据。
+
+
+}
+
+function departmentinsert(){
+
+    /*判断页面中是否存在id="dd"元素，若存在则进行删除*/
+
+    if($("#dd") != null){
+
+        $("#dd").remove();
+
+    }
+
+    /*在页面中id="tab"的元素中添加一个id="dd"的div元素*/
+
+    $("#tab").append("<div id='dd'></div>");
+
+    /*以页面中的id="dd"的元素作为对话框的内容*/
+
+    $('#dd').dialog({
+
+        title: '添加单位信息',//对话框的标题
+
+        width: 300,//对话框的宽度
+
+        closed: false,
+
+        cache: false,//不允许有缓冲
+
+        modal: true ,//采用模式，即必须关闭对话框后才能做别的操作
+
+        buttons:[{ //为对话框添加底部按钮
+
+            text:'保存',
+
+            handler:function(){
+
+                $('#ff').form('submit', {
+
+                    url:"insertSelective",
+
+                    onSubmit: function(){
+
+                        //在这里编写表单字段验证
+
+                    },
+
+                    success:function(data){
+
+                        $('#dd').dialog("close");//关闭当前添加窗口
+
+                        $('#dg').datagrid("reload");//重新装入表格的内容
+
+                    }
+
+                });
+
+
+
+            }
+
+        },{
+
+            text:'关闭',
+
+            handler:function(){
+
+                $('#dd').dialog("close");
+
+            }
+
+        }]
+
+    });
+
+    //创建添加单位信息表单
+
+    var str = ' <form id="ff" method="post">\n' +
+
+        '        <table>\n' +
+
+        '            <tr>\n' +
+
+        '                <td>单位姓名</td>\n' +
+
+        '                <td><input type="text" id="name" name="name" /> </td>\n' +
+
+        '            </tr>\n' +
+
+        '            <tr>\n' +
+
+        '                <td>单位负责人</td>\n' +
+
+        '                <td><input type="password" id="dManager" name="dManager" /> </td>\n' +
+
+        '            </tr>\n' +
+
+        '        </table>\n' +
+
+        '    </form>';
+
+    //把表单添加到对话框中
+
+    $("#dd").html(str);
+
+}
+
+function departmentdelete(rows) {
+
+    var delid={};
+
+    var id="";
+
+    $.each(rows,function (i,item) {
+
+        id+=item["id"]+",";
+
+    })
+
+    delid.id=id.substr(0,id.length-1);
+    $.messager.confirm('确认', '您确认想要删除记录吗？', function (r) {
+
+        $.ajax( //采用异步通讯向后台的json控制器的requestJson方法发送json数据
+
+            {
+
+                type:"POST", //发出请求方式
+
+                url:"deleteByPrimaryKey", //控制器
+
+                //指定数据格式为 json
+
+                contentType:"application/json;charset=UTF-8",
+
+                data:JSON.stringify(delid),//发送json数据
+
+                dataType:"json",//后台控制器返回的数据类型
+
+                success:function(data){ //发送成功后进行处理
+                    $('#dg').datagrid("reload");//重新装入表格的内容
+                }}
+
+        )
+
+    });
+
+
+
+
+
+}
+
+function initdepartment() {
+
+    /*判断页面中是否存在id等于dg的元素，若存在则进行删除*/
+
+    if ($("#dg") != null) {
+
+        $("#dg").remove(); //删除id="dg"的元素
+
+    }
+
+    $("#tab").empty();//把页面中id="tab"的元素内容清空
+
+    /*在页面中id="tab"元素中添加一个id="dg"的div元素*/
+
+    $("#tab").append("<div id='dg'></div>");
+
+    /*下面采用jquery easyui的datagrie控制进行显示单位的列表*/
+
+    $('#dg').datagrid({
+
+        //后台处理程序的地址
+
+        url : 'listAll',
+
+        pagination : true,//显示分页工具
+
+        pageNumber : 1,//表示显示第几页，第一页
+
+        pageSize : 10,//表示每页显示的记录个数
+
+        pageList : [ 10, 20, 30, 40, 50 ],//第一页显示记录个数列表
+        toolbar : [ {//显示工具栏
+
+            text : '添加',
+
+            iconCls : 'icon-add',
+
+            handler : function() {
+
+                departmentinsert();
+
+            }
+
+        }, '-', {
+
+            text : '更新',
+
+            iconCls : 'icon-edit',
+
+            handler : function() {
+
+                var row=$('#dg').datagrid("getSelections");//获取用户选择的数据行
+
+                if(row && row.length>0){
+
+                    if(row.length>1){
+
+                        alert("一次只能更新一条记录");
+
+                        return false;
+
+                    }else{
+
+                        departmentupdate(row);
+
+                    }
+
+                }else{
+
+                    alert("请选择你要更新数据行，才能进行更新操作");
+
+                }
+
+            }
+
+        }, '-', {
+
+            text : '删除',
+
+            iconCls : 'icon-remove',
+
+            handler : function() {
+
+                var rows = $("#dg").datagrid("getSelections");
+
+                if(rows && rows.length > 0){
+
+                    departmentdelete(rows);
+
+                }else{
+
+                    alert('警告', '请选择要删除数据行，才能进行删除操作');
+
+                }
+
+            }
+
+        }, '-', {
+
+            text : '导入数据',
+
+            iconCls : 'icon-help',
+
+            handler : function() {
+
+                alert('导入数据按钮')
+
+            }
+
+        }, '-', {
+
+            text : '导出数据',
+
+            iconCls : 'icon-help',
+
+            handler : function() {
+
+                alert("导出数据");
+
+            }
+
+        }, '-', {
+
+            text : '搜索',
+
+            iconCls : 'icon-search',
+
+            handler : function() {
+
+                alert("搜索数据");
+
+            }
+
+        } ],
+
+        columns : [ [ {
+
+            field : 'id',
+
+            title : '编号',
+
+            width : 100,
+
+            hidden:true
+
+        }, {
+
+            field : 'name',
+
+            title : '单位名称',
+
+            width : 200
+
+        }, {
+
+            field : 'dManager',
+
+            title : '单位负责人',
+
+            width : 200
+
+        }] ]
+
+    });
+
+}

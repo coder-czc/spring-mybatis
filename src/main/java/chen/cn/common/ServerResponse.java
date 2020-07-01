@@ -1,32 +1,30 @@
 package chen.cn.common;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+//保证序列化json的时候,如果是null的对象,key也会消失
 
+import chen.cn.common.ResponseCode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-
-
 import java.io.Serializable;
-
-//保证序列化json的时候,如果是null的对象,key也会消失
 
 @JsonSerialize(include =  JsonSerialize.Inclusion.NON_NULL)
 
 public class ServerResponse<T> implements Serializable {
 
-    private int status; //用于表示操作是否成功，若成功则为0，若失败则为1
+    private int total; //用于表示操作是否成功，若成功则为0，若失败则为1
 
     private String msg; //用于输出提示信息
 
-    private T data; //泛型数据可以是任何数据类型，这里一般是用于要进行输出的对象或对象集合
+    private T rows; //泛型数据可以是任何数据类型，这里一般是用于要进行输出的对象或对象集合
 
 
 
     /*定义了私有的构造方法*/
 
-    private ServerResponse(int status){
+    private ServerResponse(int total){
 
-        this.status = status;
+        this.total = total;
 
     }
 
@@ -36,17 +34,17 @@ public class ServerResponse<T> implements Serializable {
 
      * 定义私有方法
 
-     * @param status 状态
+     * @param total 状态
 
-     * @param data 泛型
+     * @param rows 泛型
 
      */
 
-    private ServerResponse(int status,T data){
+    private ServerResponse(int total,T rows){
 
-        this.status = status;
+        this.total = total;
 
-        this.data = data;
+        this.rows = rows;
 
     }
 
@@ -56,21 +54,21 @@ public class ServerResponse<T> implements Serializable {
 
      * 定义私有方法
 
-     * @param status  状态
+     * @param total  状态
 
      * @param msg  提示信息
 
-     * @param data  泛型
+     * @param rows  泛型
 
      */
 
-    private ServerResponse(int status,String msg,T data){
+    private ServerResponse(int total,String msg,T rows){
 
-        this.status = status;
+        this.total = total;
 
         this.msg = msg;
 
-        this.data = data;
+        this.rows = rows;
 
     }
 
@@ -80,17 +78,27 @@ public class ServerResponse<T> implements Serializable {
 
      * 定义私有方法
 
-     * @param status 状态
+     * @param total 状态
 
      * @param msg  提示信息
 
      */
 
-    private ServerResponse(int status,String msg){
+    private ServerResponse(int total,String msg){
 
-        this.status = status;
+        this.total = total;
 
         this.msg = msg;
+
+    }
+
+
+
+    private ServerResponse(String msg, T rows) {
+
+        this.msg=msg;
+
+        this.rows=rows;
 
     }
 
@@ -102,7 +110,7 @@ public class ServerResponse<T> implements Serializable {
 
     public boolean isSuccess(){
 
-        return this.status == ResponseCode.SUCCESS.getCode();
+        return this.total == ResponseCode.SUCCESS.getCode();
 
     }
 
@@ -110,17 +118,17 @@ public class ServerResponse<T> implements Serializable {
 
     /*获取状态*/
 
-    public int getStatus(){
+    public int gettotal(){
 
-        return status;
+        return total;
 
     }
 
     /*获取泛型信息*/
 
-    public T getData(){
+    public T getrows(){
 
-        return data;
+        return rows;
 
     }
 
@@ -136,9 +144,9 @@ public class ServerResponse<T> implements Serializable {
 
     /**
 
-     * 定义静态方法用于返回ServerResponse对象，且只对对象中的status进行
+     * 定义静态方法用于返回ServerResponse对象，且只对对象中的total进行
 
-     * 初始化，这在spring mvc中进行输出转换成json时为｛"status":0｝
+     * 初始化，这在spring mvc中进行输出转换成json时为｛"total":0｝
 
      * @param <T>
 
@@ -146,9 +154,9 @@ public class ServerResponse<T> implements Serializable {
 
      */
 
-    public static <T> ServerResponse<T> createBySuccess(){
+    public static <T> ServerResponse<T> createBySuccess(int total){
 
-        return new ServerResponse<T>(ResponseCode.SUCCESS.getCode());
+        return new ServerResponse<T>(total);
 
     }
 
@@ -156,9 +164,9 @@ public class ServerResponse<T> implements Serializable {
 
     /**
 
-     * 定义静态方法用于返回ServerResponse对象，且只对对象中的status和msg进行
+     * 定义静态方法用于返回ServerResponse对象，且只对对象中的total和msg进行
 
-     *  初始化，这在spring mvc中进行输出转换成json时为｛"status":0,"msg":msg｝
+     *  初始化，这在spring mvc中进行输出转换成json时为｛"total":0,"msg":msg｝
 
      * @param msg  提示信息
 
@@ -178,13 +186,13 @@ public class ServerResponse<T> implements Serializable {
 
     /**
 
-     * 定义静态方法用于返回ServerResponse对象，且只对对象中的status和data进行
+     * 定义静态方法用于返回ServerResponse对象，且只对对象中的total和rows进行
 
-     *  初始化,设data为用户对象（设用户具有id,name,pass），在spring mvc中进行输出转换成json时为｛"status":0,
+     *  初始化,设rows为用户对象（设用户具有id,name,pass），在spring mvc中进行输出转换成json时为｛"total":0,
 
-     *  "data":{"id":1,"name":"lisi","pass":"lili"}｝
+     *  "rows":{"id":1,"name":"lisi","pass":"lili"}｝
 
-     * @param data 是泛型，一般我们都把当作要输出的类的对象
+     * @param rows 是泛型，一般我们都把当作要输出的类的对象
 
      * @param <T>
 
@@ -192,9 +200,9 @@ public class ServerResponse<T> implements Serializable {
 
      */
 
-    public static <T> ServerResponse<T> createBySuccess(T data){
+    public static <T> ServerResponse<T> createBySuccess(int total,T rows){
 
-        return new ServerResponse<T>(ResponseCode.SUCCESS.getCode(),data);
+        return new ServerResponse<T>(total,rows);
 
     }
 
@@ -202,15 +210,15 @@ public class ServerResponse<T> implements Serializable {
 
     /**
 
-     * 定义静态方法用于返回ServerResponse对象，且只对对象中的status和data进行
+     * 定义静态方法用于返回ServerResponse对象，且只对对象中的total和rows进行
 
-     *      *  初始化,设data为用户对象（设用户具有id,name,pass），在spring mvc中进行输出转换成json时为｛"status":0,
+     *      *  初始化,设rows为用户对象（设用户具有id,name,pass），在spring mvc中进行输出转换成json时为｛"total":0,
 
-     *      *  "msg":"xxx成功"，"data":{"id":1,"name":"lisi","pass":"lili"}｝
+     *      *  "msg":"xxx成功"，"rows":{"id":1,"name":"lisi","pass":"lili"}｝
 
      * @param msg 提示信息
 
-     * @param data 一般为类的对象
+     * @param rows 一般为类的对象
 
      * @param <T> 一般为类
 
@@ -218,19 +226,29 @@ public class ServerResponse<T> implements Serializable {
 
      */
 
-    public static <T> ServerResponse<T> createBySuccess(String msg,T data){
+    public static <T> ServerResponse<T> createBySuccess(int total,String msg,T rows){
 
-        return new ServerResponse<T>(ResponseCode.SUCCESS.getCode(),msg,data);
+        return new ServerResponse<T>(total,msg,rows);
+
+    }
+
+    public static <T> ServerResponse<T> createBySuccess(String msg,T rows){
+
+        return new ServerResponse<T>(msg,rows);
 
     }
 
 
 
+
+
+
+
     /**
 
-     * 定义一个静态方法用于返回ServerResponse对象，且只对象中的status和msg进行初始化，在
+     * 定义一个静态方法用于返回ServerResponse对象，且只对象中的total和msg进行初始化，在
 
-     * spring mvc输出时为｛“status":1,"msg":xxxxx｝
+     * spring mvc输出时为｛“total":1,"msg":xxxxx｝
 
      * @param <T>
 

@@ -13,9 +13,9 @@ public interface JcMapper {
 
     int insertSelective(Jc record);
 
-    Jc selectByPrimaryKey(Integer id);
+    JcWithBLOBs selectByPrimaryKey(Integer id);
 
-    List<Jc> selectAll();
+    List<JcWithBLOBs> selectAll();
 
     int updateByPrimaryKeySelective(Jc record);
 

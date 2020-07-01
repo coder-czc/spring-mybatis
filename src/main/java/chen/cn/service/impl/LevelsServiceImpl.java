@@ -47,7 +47,7 @@ public class LevelsServiceImpl implements LevelsService {
 
     @Override
     public int updateByPrimaryKeySelective(Levels record) {
-        return 0;
+        return levelsMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override

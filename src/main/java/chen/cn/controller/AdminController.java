@@ -1,261 +1,129 @@
 package chen.cn.controller;
 
 import chen.cn.common.ServerResponse;
-import org.apache.ibatis.annotations.Param;
+import chen.cn.entity.Admin;
+import chen.cn.service.AdminService;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Controller;
-
-import org.springframework.util.DigestUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import chen.cn.entity.Admin;
-
-import chen.cn.service.AdminService;
-
-
-
 import javax.annotation.Resource;
-
 import javax.servlet.http.HttpServletRequest;
-
 import javax.servlet.http.HttpServletResponse;
-
-import java.util.Date;
+import java.io.IOException;
 import java.util.List;
 
-
-
-@Controller //这是控制器的的注解，代码当前类为一个控制器
-
-@RequestMapping("/admin")  //这个注解表示控制器的映射的地址为服务器地址+admin
-
+@Controller
+@RequestMapping("/admin")
 public class AdminController {
+    @Resource(name="adminServiceImpl")
+    @Autowired
+    private AdminService adminService;
 
-    @Resource(name="adminServiceImpl")  //这个注解表示自动注入adminSeerviceImpl业务实现类
+    @RequestMapping("/index")
+    public String index(){
+        return "adminindex";
+    }
 
-    @Autowired  //表示紧跟后面的字段进行封装（即getter和setter）
+    @RequestMapping("/list")
+    public String list(){
+        return "adminlist";
+    }
 
-    private AdminService adminService;  //这是与上面注入的业务实现类的接口
-
-
-
-    @RequestMapping("/delete")
-
+    @RequestMapping(value = "/deleteByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
+    public ServerResponse deleteByPrimaryKey(HttpServletRequest request, HttpServletResponse response,@RequestBody JSONObject object) throws IOException {
+        int i=0;
+        String id = object.get("id").toString();
+        String[] str = id.split(",");
+        for (String s : str) {
+          i=  adminService.deleteByPrimaryKey(Integer.parseInt(s));
 
-    public void deleteByPrimaryKey(Integer id){
-
-        adminService.deleteByPrimaryKey(id);
+        }
+        if (i> 0) {
+            // response.getWriter().println("{\"status\":0,\"msg\":\"删除用户成功\"");
+            return ServerResponse.createBySuccessMessage("删除用户成功");
+        } else {
+            //response.getWriter().println("{\"status\":1,\"msg\":\"删除用户失败\"");
+            return ServerResponse.createByErrorMessage("删除用户失败");
+        }
 
     }
 
 
-
-    @RequestMapping("/insert")
-
+    @RequestMapping(value = "/insert",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-
-    public void insert(Admin record){
-
+    public ServerResponse   insert(/*Admin record,*/ HttpServletRequest request, HttpServletResponse response) throws IOException {
         Admin admin=new Admin();
         admin.setName("zhangsan");
         admin.setPass("zhangsan");
-        admin.setAtype("1");
-        admin.setEmail("1@qq.com");
-        admin.setPhone("110");
-        admin.setQq("101");
-        adminService.insert(admin);
-    }
-
-
-
-    @RequestMapping("/insertSelective")
-
-    @ResponseBody
-
-    public void insertSelective(Admin record){}
-
-
-
-    @RequestMapping("/list")
-
-    @ResponseBody
-
-    public Admin list(HttpServletRequest request, HttpServletResponse response){
-
-        Admin admin=adminService.selectByPrimaryKey(1);
-
-        System.out.println(admin.getName());
-
-        return admin;
-
-    }
-
-
-
-    @RequestMapping("/listall")
-
-    @ResponseBody
-
-    public List<Admin> listall(HttpServletRequest request, HttpServletResponse response){
-
-        List<Admin> adminlist=adminService.selectAll();
-
-        return adminlist;
-
-    }
-
-    @RequestMapping("/checkAdmin")
-
-    @ResponseBody
-
-    public ServerResponse  checkAdmin(@Param("name") String name){
-
-        if(adminService.checkAdmin(name)>0){
-
-            return ServerResponse.createBySuccess("可以使用管理");
-
+        admin.setPhone("11111");
+        admin.setEmail("11111");
+        admin.setQq("8888");
+        admin.setAtype("2");
+        if(adminService.insert(admin)>0){
+            return ServerResponse.createBySuccessMessage("添加用户成功");
         }else{
-
-            return ServerResponse.createByErrorMessage("管理员信息已经");
-
+            return ServerResponse.createByErrorMessage("添加用户失败");
         }
-
     }
 
 
-
-    @RequestMapping("/checkEmail")
-
+    @RequestMapping(value = "/insertSelective",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-
-    public ServerResponse  checkEmail(@Param("email") String email){
-
-        if(adminService.checkEmail(email)<0){
-
-            return ServerResponse.createBySuccess("邮箱可以使用");
-
+    public ServerResponse  insertSelective(Admin record, HttpServletRequest request, HttpServletResponse response){
+        System.out.println(record.getName()+","+record.getPass());
+        if(adminService.insert(record)>0){
+            return ServerResponse.createBySuccessMessage("添加数据成功");
         }else{
-
-            return ServerResponse.createByErrorMessage("邮箱已经存在");
-
+            return ServerResponse.createByErrorMessage("添加数据失败");
         }
-
     }
 
 
-
-    @RequestMapping("/checkPhone")
-
+    @RequestMapping(value = "/selectByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-
-    public ServerResponse  checkPhone(@Param("phone") String phone){
-
-        if(adminService.checkPhone(phone)<0){
-
-            return ServerResponse.createBySuccess("电话可以使用");
-
+    public ServerResponse   selectByPrimaryKey(Integer id, HttpServletRequest request, HttpServletResponse response){
+        Admin admin=adminService.selectByPrimaryKey(id);
+        if(admin != null){
+            return ServerResponse.createBySuccess(1,admin);
         }else{
-
-            return ServerResponse.createByErrorMessage("已经存在");
-
+            return ServerResponse.createByErrorMessage("没有找到用户");
         }
-
     }
 
 
-
-
-
-    @RequestMapping("/checkNameAndPass")
-
+    @RequestMapping(value = "/updateByPrimaryKeySelective",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-
-    public ServerResponse  checkNameAndPass(@Param("name") String name,@Param("pass") String pass){
-
-        if(adminService.checkAdmin(name)>0 && adminService.checkPass(DigestUtils.md5DigestAsHex(pass.getBytes()))>0){
-
-            return ServerResponse.createBySuccess();
-
+    public ServerResponse updateByPrimaryKeySelective(Admin record, HttpServletRequest request, HttpServletResponse response){
+        System.out.println("id:"+record.getId());
+        if(adminService.updateByPrimaryKeySelective(record)>0){
+            return ServerResponse.createBySuccessMessage("更新数据成功");
         }else{
-
-            return ServerResponse.createByErrorMessage("输入的管理员和密码错误");
-
+            return ServerResponse.createByErrorMessage("更新数据失败");
         }
-
     }
 
 
-
-    @RequestMapping("/checkEmailAndPass")
-
+    @RequestMapping(value = "/updateByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
+    public void  updateByPrimaryKey(Admin record, HttpServletRequest request, HttpServletResponse response){}
 
-    public ServerResponse  checkEmailAndPass(@Param("email") String email,@Param("pass") String pass){
 
-        if(adminService.checkEmail(email)>0 && adminService.checkPass(DigestUtils.md5DigestAsHex(pass.getBytes()))>0){
+    @RequestMapping(value = "/listAll",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse   listAll( HttpServletRequest request, HttpServletResponse response){
 
-            return ServerResponse.createBySuccess();
-
+        List<Admin> adminList=adminService.selectAll();
+        System.out.println("ok");
+        if(adminList.size()>0){
+            return ServerResponse.createBySuccess(adminList.size(),adminList);
         }else{
-
-            return ServerResponse.createByErrorMessage("输入的邮箱和密码错误");
-
+            return ServerResponse.createByErrorMessage("没有找到用户");
         }
-
     }
-
-
-
-    @RequestMapping("/checkPhoneAndPass")
-
-    @ResponseBody
-
-    public ServerResponse checkPhoneAndPass(@Param("phone") String phone, @Param("pass") String pass){
-
-        if(adminService.checkPhone(phone)>0 && adminService.checkPass(DigestUtils.md5DigestAsHex(pass.getBytes()))>0){
-
-            return ServerResponse.createBySuccess();
-
-        }else{
-
-            return ServerResponse.createByErrorMessage("输入的电话和密码错误");
-
-        }
-
-    }
-
-    @RequestMapping("/updateByPrimaryKeySelective")
-
-    @ResponseBody
-
-    public void updateByPrimaryKeySelective(Admin record){
-
-
-
-    }
-
-
-
-    @RequestMapping("/updateByPrimaryKey")
-
-    @ResponseBody
-
-    public void updateByPrimaryKey(Admin record){
-
-        Admin admin=new Admin();
-        admin.setId(2);
-        admin.setName("lisi");
-        admin.setPass("lisi");
-        admin.setAtype("1");
-        admin.setEmail("1isi@qq.com");
-        admin.setPhone("110");
-        admin.setQq("101");
-        adminService.insert(admin);
-
-    }
-
 }

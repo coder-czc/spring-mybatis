@@ -2,17 +2,21 @@ package chen.cn.controller;
 
 import chen.cn.common.ServerResponse;
 import chen.cn.entity.Category;
+import chen.cn.entity.Category;
 import chen.cn.service.CategoryService;
+import net.minidev.json.JSONObject;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.DigestUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 @Controller //这是控制器的的注解，代码当前类为一个控制器
@@ -28,108 +32,100 @@ public class CategoryController {
 
 
 
-    @RequestMapping("/delete")
-
-    @ResponseBody
-
-    public void deleteByPrimaryKey(Integer id){
-
-        categoryService.deleteByPrimaryKey(id);
-
+    @RequestMapping("/index")
+    public String index(){
+        return "adminindex";
     }
-
-
-
-    @RequestMapping("/insert")
-
-    @ResponseBody
-
-    public void insert(Category record){
-
-        Category Category=new Category();
-        Category.setName("yuwen");
-        categoryService.insert(Category);
-    }
-
-
-
-    @RequestMapping("/insertSelective")
-
-    @ResponseBody
-
-    public void insertSelective(Category record){}
-
-
 
     @RequestMapping("/list")
-
-    @ResponseBody
-
-    public Category list(HttpServletRequest request, HttpServletResponse response){
-
-        Category Category=categoryService.selectByPrimaryKey(1);
-
-        System.out.println(Category.getName());
-
-        return Category;
-
+    public String list(){
+        return "categorylist";
     }
 
-
-
-    @RequestMapping("/listall")
-
+    @RequestMapping(value = "/deleteByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
+    public ServerResponse deleteByPrimaryKey(HttpServletRequest request, HttpServletResponse response,@RequestBody JSONObject object) throws IOException {
+        int i=0;
+        String id = object.get("id").toString();
+        String[] str = id.split(",");
+        for (String s : str) {
+            i=  categoryService.deleteByPrimaryKey(Integer.parseInt(s));
 
-    public List<Category> listall(HttpServletRequest request, HttpServletResponse response){
-
-        List<Category> categoryList=categoryService.selectAll();
-
-        return categoryList;
-
-    }
-
-    @RequestMapping("/checkCategory")
-
-    @ResponseBody
-
-    public ServerResponse checkCategory(@Param("name") String name){
-
-        if(categoryService.checkCategory(name)>0){
-
-            return ServerResponse.createBySuccess("可以使用管理");
-
-        }else{
-
-            return ServerResponse.createByErrorMessage("管理员信息已经");
-
+        }
+        if (i> 0) {
+            // response.getWriter().println("{\"status\":0,\"msg\":\"删除用户成功\"");
+            return ServerResponse.createBySuccessMessage("删除用户成功");
+        } else {
+            //response.getWriter().println("{\"status\":1,\"msg\":\"删除用户失败\"");
+            return ServerResponse.createByErrorMessage("删除用户失败");
         }
 
     }
 
 
-    @RequestMapping("/updateByPrimaryKeySelective")
-
+    @RequestMapping(value = "/insert",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
-
-    public void updateByPrimaryKeySelective(Category record){
-
-
-
+    public ServerResponse   insert(/*Admin record,*/ HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Category Category=new Category();
+        categoryService.insert(Category);
+        if(categoryService.insert(Category)>0){
+            return ServerResponse.createBySuccessMessage("添加用户成功");
+        }else{
+            return ServerResponse.createByErrorMessage("添加用户失败");
+        }
     }
 
 
-
-    @RequestMapping("/updateByPrimaryKey")
-
+    @RequestMapping(value = "/insertSelective",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody
+    public ServerResponse  insertSelective(Category record, HttpServletRequest request, HttpServletResponse response){
+        System.out.println(record.getName());
+        if(categoryService.insert(record)>0){
+            return ServerResponse.createBySuccessMessage("添加数据成功");
+        }else{
+            return ServerResponse.createByErrorMessage("添加数据失败");
+        }
+    }
 
-    public void updateByPrimaryKey(Category record){
 
-        Category Category=new Category();
-        Category.setId(2);
-        Category.setName("shuxue");
-        categoryService.insert(Category);
+    @RequestMapping(value = "/selectByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse   selectByPrimaryKey(Integer id, HttpServletRequest request, HttpServletResponse response){
+        Category Category=categoryService.selectByPrimaryKey(id);
+        if(Category != null){
+            return ServerResponse.createBySuccess(1,Category);
+        }else{
+            return ServerResponse.createByErrorMessage("没有找到用户");
+        }
+    }
 
+
+    @RequestMapping(value = "/updateByPrimaryKeySelective",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse updateByPrimaryKeySelective(Category record, HttpServletRequest request, HttpServletResponse response){
+        System.out.println("d:"+record.getId()+','+record.getName());
+        if(categoryService.updateByPrimaryKeySelective(record)>0){
+            return ServerResponse.createBySuccessMessage("更新数据成功");
+        }else{
+            return ServerResponse.createByErrorMessage("更新数据失败");
+        }
+    }
+
+
+    @RequestMapping(value = "/updateByPrimaryKey",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public void  updateByPrimaryKey(Category record, HttpServletRequest request, HttpServletResponse response){}
+
+
+    @RequestMapping(value = "/listAll",method = {RequestMethod.GET,RequestMethod.POST})
+    @ResponseBody
+    public ServerResponse   listAll( HttpServletRequest request, HttpServletResponse response){
+
+        List<Category> Categorys=categoryService.selectAll();
+        if(Categorys.size()>0){
+            return ServerResponse.createBySuccess(Categorys.size(),Categorys);
+        }else{
+            return ServerResponse.createByErrorMessage("没有找到用户");
+        }
     }
 }

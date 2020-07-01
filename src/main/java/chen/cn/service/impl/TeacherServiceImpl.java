@@ -45,7 +45,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Override
     public int updateByPrimaryKeySelective(Teacher record) {
-        return 0;
+        return teacherMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override

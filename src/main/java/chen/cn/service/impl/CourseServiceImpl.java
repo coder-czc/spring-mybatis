@@ -45,7 +45,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public int updateByPrimaryKeySelective(Course record) {
-        return 0;
+        return courseMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override

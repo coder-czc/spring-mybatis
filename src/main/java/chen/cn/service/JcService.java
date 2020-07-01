@@ -1,6 +1,7 @@
 package chen.cn.service;
 
 import chen.cn.entity.Jc;
+import chen.cn.entity.JcWithBLOBs;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -12,9 +13,9 @@ public interface JcService {
 
     int insertSelective(Jc record);
 
-    Jc selectByPrimaryKey(Integer id);
+    JcWithBLOBs selectByPrimaryKey(Integer id);
 
-    List<Jc> selectAll();
+    List<JcWithBLOBs> selectAll();
 
     int checkJc(@Param("name") String name); //名称进行查询
 

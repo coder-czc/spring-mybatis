@@ -45,7 +45,7 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public int updateByPrimaryKeySelective(Publisher record) {
-        return 0;
+        return publisherMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override

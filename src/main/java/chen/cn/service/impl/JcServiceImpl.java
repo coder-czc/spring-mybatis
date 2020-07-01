@@ -1,6 +1,7 @@
 package chen.cn.service.impl;
 
 import chen.cn.entity.Jc;
+import chen.cn.entity.JcWithBLOBs;
 import chen.cn.mapper.JcMapper;
 import chen.cn.service.JcService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +30,12 @@ public class JcServiceImpl implements JcService {
     }
 
     @Override
-    public Jc selectByPrimaryKey(Integer id) {
+    public JcWithBLOBs selectByPrimaryKey(Integer id) {
         return jcMapper.selectByPrimaryKey(id);
     }
 
     @Override
-    public List<Jc> selectAll() {
+    public List<JcWithBLOBs> selectAll() {
         return jcMapper.selectAll();
     }
 
@@ -45,7 +46,7 @@ public class JcServiceImpl implements JcService {
 
     @Override
     public int updateByPrimaryKeySelective(Jc record) {
-        return 0;
+        return jcMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override

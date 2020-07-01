@@ -45,7 +45,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public int updateByPrimaryKeySelective(Department record) {
-        return 0;
+        return departmentMapper.updateByPrimaryKeySelective(record);
     }
 
     @Override
