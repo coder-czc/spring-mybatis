@@ -34,7 +34,7 @@ function categoryupdate(row){
 
                 $('#ff').form('submit', {
 
-                    url:"updateByPrimaryKeySelective",
+                    url:"../category/updateByPrimaryKeySelective",
 
                     onSubmit: function(){
 
@@ -139,7 +139,7 @@ function categoryinsert(){
 
                 $('#ff').form('submit', {
 
-                    url:"insertSelective",
+                    url:"../category/insertSelective",
 
                     onSubmit: function(){
 
@@ -220,7 +220,7 @@ function categorydelete(rows) {
 
                 type:"POST", //发出请求方式
 
-                url:"deleteByPrimaryKey", //控制器
+                url:"../category/deleteByPrimaryKey", //控制器
 
                 //指定数据格式为 json
 
@@ -266,7 +266,7 @@ function initcategory() {
 
         //后台处理程序的地址
 
-        url : 'listAll',
+        url : '../category/listAll',
 
         pagination : true,//显示分页工具
 

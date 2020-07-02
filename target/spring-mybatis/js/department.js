@@ -34,7 +34,7 @@ function departmentupdate(row){
 
                 $('#ff').form('submit', {
 
-                    url:"updateByPrimaryKeySelective",
+                    url:"../department/updateByPrimaryKeySelective",
 
                     onSubmit: function(){
 
@@ -147,7 +147,7 @@ function departmentinsert(){
 
                 $('#ff').form('submit', {
 
-                    url:"insertSelective",
+                    url:"../department/insertSelective",
 
                     onSubmit: function(){
 
@@ -236,7 +236,7 @@ function departmentdelete(rows) {
 
                 type:"POST", //发出请求方式
 
-                url:"deleteByPrimaryKey", //控制器
+                url:"../department/deleteByPrimaryKey", //控制器
 
                 //指定数据格式为 json
 
@@ -282,7 +282,7 @@ function initdepartment() {
 
         //后台处理程序的地址
 
-        url : 'listAll',
+        url : '../department/listAll',
 
         pagination : true,//显示分页工具
 

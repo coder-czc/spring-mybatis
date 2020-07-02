@@ -34,7 +34,7 @@ function teacherupdate(row){
 
                 $('#ff').form('submit', {
 
-                    url:"updateByPrimaryKeySelective",
+                    url:"../teacher/updateByPrimaryKeySelective",
 
                     onSubmit: function(){
 
@@ -204,7 +204,7 @@ function teacherinsert(){
 
                 $('#ff').form('submit', {
 
-                    url:"insertSelective",
+                    url:"../teacher/insertSelective",
 
                     onSubmit: function(){
 
@@ -350,7 +350,7 @@ function teacherdelete(rows) {
 
                 type:"POST", //发出请求方式
 
-                url:"deleteByPrimaryKey", //控制器
+                url:"../teacher/deleteByPrimaryKey", //控制器
 
                 //指定数据格式为 json
 
@@ -396,7 +396,7 @@ function initteacher() {
 
         //后台处理程序的地址
 
-        url : 'listAll',
+        url : '../teacher/listAll',
 
         pagination : true,//显示分页工具
 

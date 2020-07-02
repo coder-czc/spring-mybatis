@@ -34,7 +34,7 @@ function publisherupdate(row) {
 
                 $('#ff').form('submit', {
 
-                    url: "updateByPrimaryKeySelective",
+                    url: "../publisher/updateByPrimaryKeySelective",
 
                     onSubmit: function () {
 
@@ -138,7 +138,7 @@ function publisherinsert() {
 
                 $('#ff').form('submit', {
 
-                    url: "insertSelective",
+                    url: "../publisher/insertSelective",
 
                     onSubmit: function () {
 
@@ -218,7 +218,7 @@ function publisherdelete(rows) {
 
                 type: "POST", //发出请求方式
 
-                url: "deleteByPrimaryKey", //控制器
+                url: "../publisher/deleteByPrimaryKey", //控制器
 
                 //指定数据格式为 json
 
@@ -261,7 +261,7 @@ function initpublisher() {
 
         //后台处理程序的地址
 
-        url: 'listAll',
+        url: '../publisher/listAll',
 
         pagination: true,//显示分页工具
 

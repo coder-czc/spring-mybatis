@@ -34,7 +34,7 @@ function levelsupdate(row) {
 
                 $('#ff').form('submit', {
 
-                    url: "updateByPrimaryKeySelective",
+                    url: "../levels/updateByPrimaryKeySelective",
 
                     onSubmit: function () {
 
@@ -138,7 +138,7 @@ function levelsinsert() {
 
                 $('#ff').form('submit', {
 
-                    url: "insertSelective",
+                    url: "../levels/insertSelective",
 
                     onSubmit: function () {
 
@@ -218,7 +218,7 @@ function levelsdelete(rows) {
 
                 type: "POST", //发出请求方式
 
-                url: "deleteByPrimaryKey", //控制器
+                url: "../levels/deleteByPrimaryKey", //控制器
 
                 //指定数据格式为 json
 
@@ -261,7 +261,7 @@ function initlevels() {
 
         //后台处理程序的地址
 
-        url: 'listAll',
+        url: '../levels/listAll',
 
         pagination: true,//显示分页工具
 

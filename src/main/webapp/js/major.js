@@ -34,7 +34,7 @@ function majorupdate(row) {
 
                 $('#ff').form('submit', {
 
-                    url: "updateByPrimaryKeySelective",
+                    url: "../major/updateByPrimaryKeySelective",
 
                     onSubmit: function () {
 
@@ -138,7 +138,7 @@ function majorinsert() {
 
                 $('#ff').form('submit', {
 
-                    url: "insertSelective",
+                    url: "../major/insertSelective",
 
                     onSubmit: function () {
 
@@ -218,7 +218,7 @@ function majordelete(rows) {
 
                 type: "POST", //发出请求方式
 
-                url: "deleteByPrimaryKey", //控制器
+                url: "../major/deleteByPrimaryKey", //控制器
 
                 //指定数据格式为 json
 
@@ -261,7 +261,7 @@ function initmajor() {
 
         //后台处理程序的地址
 
-        url: 'listAll',
+        url: '../major/listAll',
 
         pagination: true,//显示分页工具
 

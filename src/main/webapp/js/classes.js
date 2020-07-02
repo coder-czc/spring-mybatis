@@ -34,7 +34,7 @@ function classesupdate(row) {
 
                 $('#ff').form('submit', {
 
-                    url: "updateByPrimaryKeySelective",
+                    url: "../classes/updateByPrimaryKeySelective",
 
                     onSubmit: function () {
 
@@ -92,7 +92,7 @@ function classesupdate(row) {
 
         '                <td>专业ID</td>\n' +
 
-        '                <td><input type="text" id="majorID" name="majorID" /> </td>\n' +
+        '                <td><input type="text" id="majorId" name="majorId" /> </td>\n' +
 
         '            </tr>\n' +
 
@@ -100,7 +100,7 @@ function classesupdate(row) {
 
         '                <td>专业名</td>\n' +
 
-        '                <td><input type="text" id="majorNmae" name="majorNmae" /> </td>\n' +
+        '                <td><input type="text" id="majorName" name="majorName" /> </td>\n' +
 
         '            </tr>\n' +
 
@@ -161,7 +161,7 @@ function classesinsert() {
 
                 $('#ff').form('submit', {
 
-                    url: "insertSelective",
+                    url: "../classes/insertSelective",
 
                     onSubmit: function () {
 
@@ -264,7 +264,7 @@ function classesdelete(rows) {
 
                 type: "POST", //发出请求方式
 
-                url: "deleteByPrimaryKey", //控制器
+                url: "../classes/deleteByPrimaryKey", //控制器
 
                 //指定数据格式为 json
 
@@ -307,7 +307,7 @@ function initclasses() {
 
         //后台处理程序的地址
 
-        url: 'listAll',
+        url: '../classes/listAll',
 
         pagination: true,//显示分页工具
 

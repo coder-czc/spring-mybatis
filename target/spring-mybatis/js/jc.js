@@ -34,7 +34,7 @@ function jcupdate(row){
 
                 $('#ff').form('submit', {
 
-                    url:"updateByPrimaryKeySelective",
+                    url:"../jc/updateByPrimaryKeySelective",
 
                     onSubmit: function(){
 
@@ -183,7 +183,7 @@ function jcinsert(){
 
                 $('#ff').form('submit', {
 
-                    url:"insertSelective",
+                    url:"../jc/insertSelective",
 
                     onSubmit: function(){
 
@@ -310,7 +310,7 @@ function jcdelete(rows) {
 
                 type:"POST", //发出请求方式
 
-                url:"deleteByPrimaryKey", //控制器
+                url:"../jc/deleteByPrimaryKey", //控制器
 
                 //指定数据格式为 json
 
@@ -356,7 +356,7 @@ function initjc() {
 
         //后台处理程序的地址
 
-        url : 'listAll',
+        url : '../jc/listAll',
 
         pagination : true,//显示分页工具
 

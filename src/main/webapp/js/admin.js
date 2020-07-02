@@ -34,7 +34,7 @@ function adminupdate(row){
 
                 $('#ff').form('submit', {
 
-                    url:"updateByPrimaryKeySelective",
+                    url:"../admin/updateByPrimaryKeySelective",
 
                     onSubmit: function(){
 
@@ -171,7 +171,7 @@ function admininsert(){
 
                 $('#ff').form('submit', {
 
-                    url:"insertSelective",
+                    url:"../admin/insertSelective",
 
                     onSubmit: function(){
 
@@ -284,7 +284,7 @@ function admindelete(rows) {
 
                 type:"POST", //发出请求方式
 
-                url:"deleteByPrimaryKey", //控制器
+                url:"../admin/deleteByPrimaryKey", //控制器
 
                 //指定数据格式为 json
 
@@ -330,7 +330,7 @@ function initadmin() {
 
         //后台处理程序的地址
 
-        url : 'listAll',
+        url : '../admin/listAll',
 
         pagination : true,//显示分页工具
 

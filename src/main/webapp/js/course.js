@@ -34,7 +34,7 @@ function courseupdate(row) {
 
                 $('#ff').form('submit', {
 
-                    url: "updateByPrimaryKeySelective",
+                    url: "../course/updateByPrimaryKeySelective",
 
                     onSubmit: function () {
 
@@ -161,7 +161,7 @@ function courseinsert() {
 
                 $('#ff').form('submit', {
 
-                    url: "insertSelective",
+                    url: "../course/insertSelective",
 
                     onSubmit: function () {
 
@@ -266,7 +266,7 @@ function coursedelete(rows) {
 
                 type: "POST", //发出请求方式
 
-                url: "deleteByPrimaryKey", //控制器
+                url: "../course/deleteByPrimaryKey", //控制器
 
                 //指定数据格式为 json
 
@@ -309,7 +309,7 @@ function initcourse() {
 
         //后台处理程序的地址
 
-        url: 'listAll',
+        url: '../course/listAll',
 
         pagination: true,//显示分页工具
 
