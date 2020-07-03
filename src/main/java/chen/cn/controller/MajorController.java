@@ -1,5 +1,6 @@
 package chen.cn.controller;
 
+import chen.cn.common.ResponseCode;
 import chen.cn.common.ServerResponse;
 import chen.cn.entity.Major;
 import chen.cn.service.MajorService;
@@ -60,6 +61,33 @@ public class MajorController {
 
     }
 
+    @RequestMapping("/deleteall")
+
+    @ResponseBody
+
+    public ServerResponse deleteall(String id){
+
+        String[] deleteids=id.split(",");//把客户端传送过来的字符串（一般为“1，2，3，4”）转换成数组
+
+        if(deleteids !=null && deleteids.length>0){
+
+            if(majorService.deleteByList(deleteids)>0){
+
+                return ServerResponse.createBySuccess(ResponseCode.SUCCESS.getCode(),"删除管理员成功");
+
+            }else{
+
+                return ServerResponse.createByErrorCodeMessage(ResponseCode.ERROR.getCode(),"删除数据失败");
+
+            }
+
+        }else{
+
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.ERROR.getCode(),"删除数据失败");
+
+        }
+
+    }
 
     @RequestMapping(value = "/insert",method = {RequestMethod.GET,RequestMethod.POST})
     @ResponseBody

@@ -8,6 +8,8 @@ import java.util.List;
 public interface AdminMapper {
     int deleteByPrimaryKey(Integer id);
 
+    int deleteByList(@Param("deleteids") String[] deleteids); //批量删除数据，要删除数据存放在一个字符数组中
+
     int insert(Admin record);
 
     int insertSelective(Admin record);

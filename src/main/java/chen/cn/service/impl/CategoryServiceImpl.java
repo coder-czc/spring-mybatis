@@ -21,6 +21,14 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+
+    public int deleteByList(String[] ids) {  //注意方法参数是字符串的数组
+
+        return categoryMapper.deleteByList(ids);
+
+    }
+
+    @Override
     public int insert(Category record) {
         return categoryMapper.insert(record);
     }

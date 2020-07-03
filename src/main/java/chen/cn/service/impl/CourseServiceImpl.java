@@ -19,6 +19,14 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+
+    public int deleteByList(String[] ids) {  //注意方法参数是字符串的数组
+
+        return courseMapper.deleteByList(ids);
+
+    }
+
+    @Override
     public int insert(Course record) {
         return courseMapper.insert(record);
     }

@@ -21,6 +21,15 @@ public class LevelsServiceImpl implements LevelsService {
     }
 
     @Override
+
+    public int deleteByList(String[] ids) {  //注意方法参数是字符串的数组
+
+        return levelsMapper.deleteByList(ids);
+
+    }
+
+
+    @Override
     public int insert(Levels record) {
         return levelsMapper.insert(record);
     }

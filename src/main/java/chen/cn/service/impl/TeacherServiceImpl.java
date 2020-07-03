@@ -19,6 +19,15 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
+
+    public int deleteByList(String[] ids) {  //注意方法参数是字符串的数组
+
+        return teacherMapper.deleteByList(ids);
+
+    }
+
+
+    @Override
     public int insert(Teacher record) {
         return teacherMapper.insert(record);
     }

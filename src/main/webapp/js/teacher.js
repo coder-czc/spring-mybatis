@@ -331,6 +331,66 @@ function teacherinsert(){
 
 function teacherdelete(rows) {
 
+    var row=$('#dg').datagrid("getSelections");//获取用户选择的数据行
+
+    if(row && row.length>0) { //判断用户是否选择了要进行删除的数据行
+
+        if (row.length >= 1) { //若row.length大于等于1，则表选择了要删除的数据行。
+
+            var strid = "";
+
+            //下面是遍历用户所选择的数据行所对应的id主关键字，
+
+            $(row).each(function (index, item) {
+
+                strid += item["id"] + ",";//把用户选择的数据行的id保串连起来构成如“1，2，3，”这里表示用户选择了id为1，2，3的数据行
+
+            });
+
+            strid = strid.substring(0, strid.length - 1);//把数据行最后的分号去掉
+
+            $.messager.confirm('确认', '您确认想要删除记录吗？', function (r) {
+
+                if (r) { //若确认要删除，则采用异步方式把要删除的数据行对应的id串传送给后台进行处理
+
+                    $.ajax({
+
+                        type: "post",
+
+                        url: "../teacher/deleteall",//后台处理程序
+
+                        data: {
+
+                            id: strid //要删除数据行对应的id字符串
+
+                        },
+
+                        success: function (data) {
+
+                            $('#dg').datagrid("reload"); //若删除成功则重新加载数据表的数据
+
+                        }
+
+                    });
+
+                }
+
+            });
+
+
+
+        } else {
+
+            alert("你没有选择数据行，所以不能进行删除操作");
+
+            return false;
+
+        }
+
+    }
+
+/*
+
     var delid={};
 
     var id="";
@@ -367,6 +427,7 @@ function teacherdelete(rows) {
         )
 
     });
+*/
 
 
 

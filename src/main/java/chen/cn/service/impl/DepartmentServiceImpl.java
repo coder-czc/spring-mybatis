@@ -19,6 +19,15 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
+
+    public int deleteByList(String[] ids) {  //注意方法参数是字符串的数组
+
+        return departmentMapper.deleteByList(ids);
+
+    }
+
+
+    @Override
     public int insert(Department record) {
         return departmentMapper.insert(record);
     }

@@ -20,6 +20,15 @@ public class JcServiceImpl implements JcService {
     }
 
     @Override
+
+    public int deleteByList(String[] ids) {  //注意方法参数是字符串的数组
+
+        return jcMapper.deleteByList(ids);
+
+    }
+
+
+    @Override
     public int insert(Jc record) {
         return jcMapper.insert(record);
     }

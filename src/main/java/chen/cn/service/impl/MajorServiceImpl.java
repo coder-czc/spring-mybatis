@@ -18,6 +18,15 @@ public class MajorServiceImpl implements MajorService {
         return majorMapper.deleteByPrimaryKey(id);
     }
 
+
+    @Override
+
+    public int deleteByList(String[] ids) {  //注意方法参数是字符串的数组
+
+        return majorMapper.deleteByList(ids);
+
+    }
+
     @Override
     public int insert(Major record) {
         return majorMapper.insert(record);

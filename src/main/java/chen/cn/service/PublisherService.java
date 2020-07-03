@@ -8,6 +8,8 @@ import java.util.List;
 public interface PublisherService {
     int deleteByPrimaryKey(Integer id);
 
+    int deleteByList(String[] iddeleteids);  //批量删除数据，要删除数据存放在一个字符数组中
+
     int insert(Publisher record);
 
     int insertSelective(Publisher record);

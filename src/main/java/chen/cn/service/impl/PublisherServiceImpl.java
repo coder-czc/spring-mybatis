@@ -19,6 +19,15 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+
+    public int deleteByList(String[] ids) {  //注意方法参数是字符串的数组
+
+        return publisherMapper.deleteByList(ids);
+
+    }
+
+
+    @Override
     public int insert(Publisher record) {
         return publisherMapper.insert(record);
     }
